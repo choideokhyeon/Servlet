@@ -7,7 +7,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-<h1>Login</h1>
-<div class="msg">${msg}</div><br>
+
 </body>
 </html>

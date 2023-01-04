@@ -5,16 +5,16 @@ import javax.servlet.http.HttpServletResponse;
 
 public class LoginController implements SubController {
 
+	private static String msg;
+	
 	@Override
 	public void execute(HttpServletRequest req, HttpServletResponse resp) {
-		// 1 파라미터
-
-		// 2 Validation
-
-		// 3 Service
-
-		// 4 View
+		
 		try {
+			msg = req.getParameter("msg");
+			if(msg != null)
+				req.setAttribute("msg", msg);
+			
 			req.getRequestDispatcher("/WEB-INF/view/auth/login.jsp").forward(req, resp);
 		} catch (Exception e) {
 			e.printStackTrace();
