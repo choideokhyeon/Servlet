@@ -8,7 +8,7 @@ public class MemberDTO {
 	private String addr1;
 	private String addr2;
 	private String grade;
-	public MemberDTO() {
+	public MemberDTO()  {
 		super();
 	}
 	public String getEmail() {

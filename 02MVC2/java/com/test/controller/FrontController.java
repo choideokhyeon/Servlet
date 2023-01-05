@@ -32,7 +32,7 @@ public class FrontController extends HttpServlet {
 		list.put(path + "/notice/list.do", new NoticeListController());		
 		
 		//Auth
-		list.put(path + "/auth/login.do", new LoginController());		
+		list.put(path + "/auth/login.do", new LoginController());
 		
 		//Main
 		list.put(path + "/main.do", new MainController());		

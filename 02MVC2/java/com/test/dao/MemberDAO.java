@@ -2,6 +2,7 @@ package com.test.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
@@ -9,6 +10,7 @@ import javax.sql.DataSource;
 import com.test.dto.MemberDTO;
 
 public class MemberDAO {
+	
 	//DataSource
 	private DataSource ds;
 	
@@ -72,5 +74,43 @@ public class MemberDAO {
 		
 		return result;
 	}
+	
+	
+	
+	//SELECT
+	public MemberDTO Select(String email)
+	{
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		MemberDTO DTO = null;
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement("select * from tbl_member where email=?");
+			pstmt.setString(1, email);
+			rs=pstmt.executeQuery();
+			if(rs != null)
+			{
+				rs.next();
+				DTO = new MemberDTO();
+				DTO.setEmail(rs.getString(1));
+				DTO.setPwd(rs.getString(2));
+				DTO.setPhone(rs.getString(3));
+				DTO.setZipcode(rs.getString(4));
+				DTO.setAddr1(rs.getString(5));
+				DTO.setAddr2(rs.getString(6));
+				DTO.setGrade(rs.getString(7));
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		} finally{
+			try {rs.close();}catch(Exception e) {}
+			try {pstmt.close();}catch(Exception e) {}
+			try {conn.close();}catch(Exception e) {}
+		}
+		
+		return DTO;
+	}
+	
 	
 }

@@ -36,7 +36,7 @@ public class MemberJoinController implements SubController {
 		Map<String,String[]> params = req.getParameterMap();
 		for(String name : params.keySet())
 		{
-			
+			System.out.println("name + " + name + " val : " + params.get(name)[0]);
 		}
 		
 		
