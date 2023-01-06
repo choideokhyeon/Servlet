@@ -13,6 +13,7 @@
 		<welcome-file>default.jsp</welcome-file>
 	</welcome-file-list>
 
+
 	<!-- FrontController Mapping -->
 	<servlet>
 		<servlet-name>FC</servlet-name>
@@ -23,6 +24,7 @@
 		<url-pattern>*.do</url-pattern> <!-- do 확장자로 된 모든 url경로를 FrontController로 보냄 -->
 	</servlet-mapping>
 
+
 	<!-- DataSource Setting -->
 	<resource-ref>
 		<res-ref-name>jdbc/mysql</res-ref-name>
@@ -32,6 +34,7 @@
 
 
 	<!-- Filter -->
+		<!-- ForwardLoginpageFilter -->
 	<filter>
 		<filter-name>ForwardLogin</filter-name>
 		<filter-class>com.test.filter.forwardloginpageFilter</filter-class>
@@ -39,6 +42,17 @@
 	<filter-mapping>
 		<filter-name>ForwardLogin</filter-name>
 		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
+		<!-- Permission Filter -->
+	<filter>
+		<filter-name>PermissionFilter</filter-name>
+		<filter-class>com.test.filter.permissionFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>PermissionFilter</filter-name>
+		<url-pattern>/board/*</url-pattern>
+		<url-pattern>/notice/*</url-pattern>
 	</filter-mapping>
 
 </web-app>

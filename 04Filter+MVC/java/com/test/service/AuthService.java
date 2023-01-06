@@ -46,7 +46,7 @@ public class AuthService {
 				
 				//Session 유지시간 설정
 				HttpSession session = request.getSession();
-				session.setAttribute("authdto", "adto");
+				session.setAttribute("authdto", adto);
 				session.setMaxInactiveInterval(300);
 				
 				//true 전달

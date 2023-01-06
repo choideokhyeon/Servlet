@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>LOGOUT</title>
 </head>
 <body>
 <h1>logout</h1>

@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>NOTICE LIST</title>
+<title>NOTICE POST</title>
 </head>
 <!-- BSS -->
 <link
@@ -104,8 +104,10 @@ section{
 		<div class="msg">${msg}</div>
 		<div>
 			<a href="${pageContext.request.contextPath}/main.do"><i class="bi bi-house-door"></i></a>
-			> NOTICE<br>
-			<a href="${pageContext.request.contextPath}/notice/post.do"><i class="bi bi-pencil-square"></i>글쓰기</a>
+			> NOTICE > POST
+		</div>
+		<div>
+			<input type="text" />
 		</div>
 	</section>
 </body>
