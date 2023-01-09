@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-	
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -79,7 +79,6 @@ section {
 	top: 0px;
 	font-size: 0.5rem;
 }
-
 </style>
 <body>
 	<header>
@@ -102,9 +101,9 @@ section {
 			<a href="${pageContext.request.contextPath}/main.do"><i
 				class="bi bi-house-door"></i></a> > BOARD<br>
 		</div>
-		
-		<h1>자유게시판</h1>
 
+		<h1>자유게시판</h1>
+		<p>Page No : (<span style="color:red;">${pagedto.criteria.pageno} </span> / ${pagedto.totalpage})</p>
 		<table class="table">
 			<thead>
 				<tr>
@@ -117,15 +116,15 @@ section {
 			</thead>
 
 			<tbody>
-			<c:forEach var="dto" items="${list}" varStatus="state" >
-				<tr>
-					<td>${dto.no}</td>
-					<td>${dto.subject}</td>
-					<td>${dto.email}</td>
-					<td>${dto.regdate}</td>
-					<td>${dto.count}</td>
-				</tr>
-			</c:forEach>
+				<c:forEach var="dto" items="${list}" varStatus="state">
+					<tr>
+						<td>${dto.no}</td>
+						<td><a href="javascript:void(0)">${dto.subject}</a></td>
+						<td>${dto.email}</td>
+						<td>${dto.regdate}</td>
+						<td>${dto.count}</td>
+					</tr>
+				</c:forEach>
 			</tbody>
 
 			<tfoot>
@@ -133,27 +132,40 @@ section {
 					<!-- 페이지네이션 -->
 					<td colspan=3>
 						<nav aria-label="Page navigation example">
-							<ul class="pagination" style="height:30px;">
-								<li class="page-item"><a class="page-link" href="javascript:void(0)"
-									aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
-								</a></li>
-								<li class="page-item"><a class="page-link" href="javascript:void(0)">1</a></li>
-								<li class="page-item"><a class="page-link" href="javascript:void(0)">2</a></li>
-								<li class="page-item"><a class="page-link" href="javascript:void(0)">3</a></li>
-								<li class="page-item"><a class="page-link" href="javascript:void(0)"
-									aria-label="Next"> <span aria-hidden="true">&raquo;</span>
-								</a></li>
+							<ul class="pagination" style="height: 30px;">
+
+								<!-- Prev Button -->
+								<c:if test="${pagedto.prev}">
+									<li class="page-item"><a class="page-link"
+										href="${pageContext.request.contextPath}/board/list.do?pageno=${pagedto.nowBlock * pagedto.pagePerBlock - pagedto.pagePerBlock * 2 + 1}" aria-label="Previous"> <span
+											aria-hidden="true">&laquo;</span>
+									</a></li>
+								</c:if>
+
+
+								<!-- Page Number -->
+								<c:forEach begin="${pagedto.startPage}" end="${pagedto.endPage}"
+									var="pageno" step="1">
+									<li class="page-item"><a class="page-link"
+										href="${pageContext.request.contextPath}/board/list.do?pageno=${pageno}">${pageno}</a></li>
+								</c:forEach>
+
+
+								<!-- Next button -->
+								<c:if test="${pagedto.next}">
+									<li class="page-item"><a class="page-link"
+										href="${pageContext.request.contextPath}/board/list.do?pageno=${pagedto.nowBlock*pagedto.pagePerBlock + 1}" aria-label="Next"> <span
+											aria-hidden="true">&raquo;</span>
+									</a></li>
+								</c:if>
 							</ul>
 						</nav>
 					</td>
-					<td colspan=2 style="text-align:right;">
-					<a
-						href="${pageContext.request.contextPath}/board/post.do"
-						class="btn btn-warning"><i class="bi bi-pencil-square"></i>글쓰기</a>
+					<td colspan=2 style="text-align: right;">
 						<!-- 글쓰기/처음으로 -->
-					<a
-						href="${pageContext.request.contextPath}/board/list.do"
-						class="btn btn-danger">처음으로</a></td>
+						<a href="${pageContext.request.contextPath}/board/post.do" class="btn btn-warning"><i class="bi bi-pencil-square"></i>글쓰기</a>
+						<a href="${pageContext.request.contextPath}/board/list.do?pageno=1" class="btn btn-danger">처음으로</a>
+					</td>
 				</tr>
 			</tfoot>
 		</table>

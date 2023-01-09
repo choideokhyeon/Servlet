@@ -20,29 +20,30 @@
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
 
 <style>
-a{
-	text-decoration : none;
-	color : black;
+a {
+	text-decoration: none;
+	color: black;
 }
-ul{
-	list-style : none;
-	padding : 0px;
+
+ul {
+	list-style: none;
+	padding: 0px;
 }
 
 header {
-	margin-bottom : 10px;
+	margin-bottom: 10px;
 }
 
 header nav {
-	height : 80px;
-	background-color : #F2F2F2;
+	height: 80px;
+	background-color: #F2F2F2;
 }
 
 header nav ul {
-	height : 80px;
+	height: 80px;
 	display: flex;
 	justify-content: space-around;
-	align-items : center;
+	align-items: center;
 }
 
 header nav ul li {
@@ -63,12 +64,10 @@ td {
 
 table {
 	border-collapse: collapse;
-	text-align: center;
-	width: 500px;
 }
 
-section{
-	height : 600px;
+section {
+	height: 600px;
 }
 
 .container {
@@ -76,7 +75,7 @@ section{
 }
 
 .container * {
-	margin-bottom : 10px;
+	margin-bottom: 10px;
 }
 
 .container .msg {
@@ -85,7 +84,6 @@ section{
 	top: 0px;
 	font-size: 0.5rem;
 }
-
 </style>
 <body>
 	<header>
@@ -102,12 +100,37 @@ section{
 	<section class="container">
 		<div class="msg">${msg}</div>
 		<div>
-			<a href="${pageContext.request.contextPath}/main.do"><i class="bi bi-house-door"></i></a>
-			> BOARD > POST
+			<a href="${pageContext.request.contextPath}/main.do"><i
+				class="bi bi-house-door"></i></a> > BOARD > POST
 		</div>
-		<div>
-			<input type="text" />
-		</div>
+		<h1>자유게시판</h1>
+		<p></p>
+		<form action="${pageContext.request.contextPath}/board/post.do" method="post">
+			<table class="table w-50">
+				<tr>
+					<td>제목</td>
+					<td><input type="text" class="form-control" name="subject" /></td>
+				</tr>
+				<tr>
+					<td>작성자</td>
+					<td><input type="text" class="form-control" name="email" value="${authdto.email}" readonly /></td>
+				</tr>
+				<tr>
+					<td>내용</td>
+					<td><textarea id="" cols="30" rows="10" class="form-control" name="content" style="resize: none;"></textarea></td>
+				</tr>
+<!-- 				<tr>
+					<td>파일 업로드</td>
+					<td><input type="file" class="form-control" name="files" multiple /></td>
+				</tr> -->
+				<tr>
+					<td colspan=2>
+						<input type="submit" value="전송" class="btn btn-primary" />
+						<input type="reset" value="초기화" class="btn btn-secondary" />
+					</td>
+				</tr>
+			</table>
+		</form>
 	</section>
 </body>
 </html>

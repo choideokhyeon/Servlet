@@ -40,7 +40,8 @@ public class BoardListController implements SubController {
 			else
 			{
 				//페이지 이동 요청했을때
-				
+				int pageno = Integer.parseInt(params.get("pageno")[0]);
+				criteria = new Criteria(pageno,10);
 			}
 			
 			boolean result = service.GetBoardList(criteria , req);

@@ -11,6 +11,7 @@ import javax.sql.DataSource;
 
 import com.test.dto.BoardDTO;
 import com.test.dto.Criteria;
+import com.test.dto.MemberDTO;
 
 public class BoardDAO {
 	
@@ -93,6 +94,62 @@ public class BoardDAO {
 		
 		return list;
 	}
+
+
+	
+	public int getAmount() {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		int cnt = 0;
+		
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement("select count(*) from tbl_board");
+			rs=pstmt.executeQuery();
+			
+			if(rs != null)
+			{
+				rs.next();
+				cnt = rs.getInt(1);				
+			}
+		} catch(Exception e){e.printStackTrace();}
+		finally{
+			try {rs.close();}catch(Exception e) {}
+			try {pstmt.close();}catch(Exception e) {}
+			try {conn.close();}catch(Exception e) {}
+		}
+		
+		return cnt;
+	}
 	
 	
+	
+	public int Insert(BoardDTO DTO) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		int result = 0;
+		
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement("insert into tbl_board values(?,?,?,?,now(),0,?,?,?)"); 
+			pstmt.setString(1, null);
+			pstmt.setString(2, DTO.getEmail());
+			pstmt.setString(3, DTO.getSubject());
+			pstmt.setString(4, DTO.getContent());
+			pstmt.setString(5, DTO.getDirpath());
+			pstmt.setString(6, DTO.getFilename());
+			pstmt.setString(7, DTO.getFilesize());
+			result = pstmt.executeUpdate();
+
+		} catch(Exception e){e.printStackTrace();}
+		finally{
+			try {pstmt.close();}catch(Exception e) {}
+			try {conn.close();}catch(Exception e) {}
+		}
+		
+		return result;
+	}
 }
