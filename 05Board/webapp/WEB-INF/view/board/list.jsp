@@ -119,7 +119,7 @@ section {
 				<c:forEach var="dto" items="${list}" varStatus="state">
 					<tr>
 						<td>${dto.no}</td>
-						<td><a href="javascript:void(0)">${dto.subject}</a></td>
+						<td><a href="${pageContext.request.contextPath}/board/read.do?bno=${dto.no}&pageno=${pagedto.criteria.pageno}">${dto.subject}</a></td>
 						<td>${dto.email}</td>
 						<td>${dto.regdate}</td>
 						<td>${dto.count}</td>

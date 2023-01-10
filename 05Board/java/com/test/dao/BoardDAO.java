@@ -10,8 +10,6 @@ import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
 import com.test.dto.BoardDTO;
-import com.test.dto.Criteria;
-import com.test.dto.MemberDTO;
 
 public class BoardDAO {
 	
@@ -152,4 +150,79 @@ public class BoardDAO {
 		
 		return result;
 	}
+
+
+	//게시물 열람
+	public BoardDTO Select(int bno) {
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		BoardDTO DTO = null;
+		
+		try {
+			conn = ds.getConnection();
+			
+			pstmt = conn.prepareStatement("select * from tbl_board where no=?");
+			pstmt.setInt(1, bno);
+			
+			rs=pstmt.executeQuery();
+			
+			if(rs != null)
+			{
+				while(rs.next())
+				{
+					DTO = new BoardDTO();
+					DTO.setNo(rs.getInt(1) + "");
+					DTO.setEmail(rs.getString(2));
+					DTO.setSubject(rs.getString(3));
+					DTO.setContent(rs.getString(4));
+					DTO.setRegdate(rs.getString(5));
+					DTO.setCount(rs.getInt(6) + "");
+					DTO.setDirpath(rs.getString(7));
+					DTO.setFilename(rs.getString(8));
+					DTO.setFilesize(rs.getString(9));
+				}
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+			return null;
+		} finally{
+			try {rs.close();}catch(Exception e) {}
+			try {pstmt.close();}catch(Exception e) {}
+			try {conn.close();}catch(Exception e) {}
+		}
+		
+		return DTO;
+	}
+	
+	
+	//조회수
+	public int Update(int bno)
+	{
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		int result = 0;
+		
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement("update tbl_board set count=count+1 where no=?");
+			pstmt.setInt(1, bno);
+			
+			result = pstmt.executeUpdate();
+
+		} catch(Exception e){e.printStackTrace();}
+		finally{
+			try {pstmt.close();}catch(Exception e) {}
+			try {conn.close();}catch(Exception e) {}
+		}
+		
+		return result;
+	}
+	
+	
+	
+	
 }

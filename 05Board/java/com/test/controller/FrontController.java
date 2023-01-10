@@ -6,10 +6,19 @@ import java.util.Map;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+
+//파일 업로드 정보
+@MultipartConfig
+(
+	fileSizeThreshold = 1024 * 1024*10,	//10MB 업로드 파일이 10MB 이상이 될 때 임시경로(temp)에 저장
+	maxFileSize = 1024 * 1024 * 50,		//50MB 업로드 파일의 최대 크기
+	maxRequestSize = 1024 * 1024 * 100	//100MB request 전체의 크기
+)
 public class FrontController extends HttpServlet {
 
 	private Map<String,SubController> list;
@@ -28,6 +37,7 @@ public class FrontController extends HttpServlet {
 		//Board
 		list.put(path + "/board/list.do", new BoardListController());
 		list.put(path + "/board/post.do", new BoardPostController());
+		list.put(path + "/board/read.do", new BoardReadController());
 		
 		//Notice
 		list.put(path + "/notice/list.do", new NoticeListController());

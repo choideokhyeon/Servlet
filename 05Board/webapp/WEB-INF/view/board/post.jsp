@@ -105,7 +105,7 @@ section {
 		</div>
 		<h1>자유게시판</h1>
 		<p></p>
-		<form action="${pageContext.request.contextPath}/board/post.do" method="post">
+		<form action="${pageContext.request.contextPath}/board/post.do" method="post" enctype="multipart/form-data">
 			<table class="table w-50">
 				<tr>
 					<td>제목</td>
@@ -119,10 +119,10 @@ section {
 					<td>내용</td>
 					<td><textarea id="" cols="30" rows="10" class="form-control" name="content" style="resize: none;"></textarea></td>
 				</tr>
-<!-- 				<tr>
+				<tr>
 					<td>파일 업로드</td>
 					<td><input type="file" class="form-control" name="files" multiple /></td>
-				</tr> -->
+				</tr>
 				<tr>
 					<td colspan=2>
 						<input type="submit" value="전송" class="btn btn-primary" />

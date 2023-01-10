@@ -4,11 +4,13 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import com.test.dto.Criteria;
+import com.test.dto.BoardDTO;
+import com.test.dto.PageDTO;
 import com.test.service.BoardService;
 
-public class BoardListController implements SubController {
+public class BoardReadController implements SubController {
 
 	private static String msg;
 	private BoardService service = BoardService.getInstance();
@@ -17,41 +19,28 @@ public class BoardListController implements SubController {
 	public void execute(HttpServletRequest req, HttpServletResponse resp) {
 
 		try {
+
 			// 1 파라미터 받기
 			Map<String, String[]> params = req.getParameterMap();
 
-			
 			// 2 Validation
 			boolean isvalid = isValid(params);
-			if (!isvalid)
-			{
+			if (!isvalid) {
 				// 유효성 체크 오류 발생시 전달할 메시지 + 이동될 경로
 				req.setAttribute("msg", msg);
-				req.getRequestDispatcher("/WEB-INF/view/main.jsp").forward(req, resp);
+				req.getRequestDispatcher("/WEB-INF/view/board/post.jsp").forward(req, resp);
 				return;
 			}
 
-			
-			// 3 Service
-			Criteria criteria = null;
-			if(params.get("pageno") == null) // 최초의 /board/list.do 접근
-			{
-				criteria = new Criteria();	//pageno = 1 , amount = 10;
-			}
-			else
-			{
-				//페이지 이동 요청했을때
-				int pageno = Integer.parseInt(params.get("pageno")[0]);
-				criteria = new Criteria(pageno,10);
-			}
-			boolean result = service.GetBoardList(criteria , req , resp);
-			
+			// 3 Service 실행
+			int bno = Integer.parseInt(params.get("bno")[0]);
+			boolean result = service.GetBoard(bno,req,resp);
 
-			// 4 View
-			if (result)
-			{
-				req.getRequestDispatcher("/WEB-INF/view/board/list.jsp").forward(req, resp);
-			}
+			// 4 View 이동
+			String method = req.getMethod();
+			System.out.println("[BRC] 요청 METHOD : " + method);
+			req.getRequestDispatcher("/WEB-INF/view/board/read.jsp").forward(req, resp);
+			return ;
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -59,6 +48,7 @@ public class BoardListController implements SubController {
 	}
 
 	private boolean isValid(Map<String, String[]> params) {
+		msg = "유효성 체크 오류";
 		return true;
 	}
 }

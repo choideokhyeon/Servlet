@@ -47,7 +47,7 @@ public class BoardPostController implements SubController {
 			DTO.setEmail(params.get("email")[0]);
 			DTO.setSubject(params.get("subject")[0]);
 			DTO.setContent(params.get("content")[0]);
-			System.out.println("DTO : " + DTO);
+			System.out.println("[BPC]DTO : " + DTO);
 			boolean result = service.PostBoard(DTO, req);
 
 			// 4 View
