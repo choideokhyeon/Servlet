@@ -28,7 +28,7 @@ public class BoardListController implements SubController {
 				// 유효성 체크 오류 발생시 전달할 메시지 + 이동될 경로
 				req.setAttribute("msg", msg);
 				req.getRequestDispatcher("/WEB-INF/view/main.jsp").forward(req, resp);
-				return;
+				return ;
 			}
 
 			

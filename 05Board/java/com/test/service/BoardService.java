@@ -1,10 +1,15 @@
 package com.test.service;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -127,7 +132,7 @@ public class BoardService {
 					System.out.println("파일명 : " + getFileName(part));
 					String filename = getFileName(part);
 					
-					if(!filename.equals(""))
+					if(!filename.equals(""))	//파일이 있다면
 					{
 						//폴더 생성
 						File dir = new File(path);
@@ -149,6 +154,7 @@ public class BoardService {
 					System.out.println("-------------------------------------------");
 				}
 			}
+			DTO.setDirpath(uuid + "");
 			DTO.setFilename(filelist.toString());
 			DTO.setFilesize(filesize.toString());
 			
@@ -225,5 +231,108 @@ public class BoardService {
 		return flag;
 	}
 	
+	
+	//단일 파일 다운로드
+	public void download(HttpServletRequest req, HttpServletResponse resp)
+	{
+		try {
+			
+		//파라미터
+		String filename = req.getParameter("filename");
+		String uuid = req.getParameter("uuid");
+		
+		//이메일 정보 확인
+		HttpSession session = req.getSession(false);
+		AuthDTO ADTO = (AuthDTO)session.getAttribute("authdto");
+		String email = ADTO.getEmail();
+		
+		//경로설정
+		String path = req.getServletContext().getRealPath("/");
+		path += "upload" + File.separator + email + File.separator + uuid;
+		//		upload/email/63b6877c-ec83-4738-90b9-ba58da0b53f5
+		System.out.println("BoardService : " + path);
+		
+		//헤더설정
+		resp.setHeader("Content-Type", "application/octet-stream;charset=UTF-8");
+		resp.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(filename,"UTF-8").replaceAll("\\+", "%20"));
+		
+		//스트림형성
+		FileInputStream fin = new FileInputStream(path + File.separator + filename);
+		ServletOutputStream bout = resp.getOutputStream();
+		
+		//다운로드 처리
+		int read = 0;
+		byte[] buff = new byte[4096];
+		while(true)
+		{
+			read = fin.read(buff, 0 , buff.length);
+			if(read == -1)
+				break;
+			bout.write(buff, 0, read);
+		}
+		bout.flush();
+		bout.close();
+		fin.close();
+		
+		}
+		catch(Exception e) {e.printStackTrace();}
+	}
+	
+	
+	//zip 파일 다운로드
+	public void downloadzip(HttpServletRequest req, HttpServletResponse resp) {
+		try {
+			
+			//파라미터
+//			String filename = req.getParameter("filename");
+			String uuid = req.getParameter("uuid");
+			
+			//이메일 정보 확인
+			HttpSession session = req.getSession(false);
+			AuthDTO ADTO = (AuthDTO)session.getAttribute("authdto");
+			String email = ADTO.getEmail();
+			
+			//경로설정
+			String path = req.getServletContext().getRealPath("/");
+			path += "upload" + File.separator + email + File.separator + uuid;
+			//		upload/email/63b6877c-ec83-4738-90b9-ba58da0b53f5
+			System.out.println("BoardService : " + path);
+			
+			
+			// ------------------------------------
+			FileInputStream fin = null;
+			ZipEntry zipEntry = null;
+			File dir = new File(path);
+			File filelist[] = dir.listFiles();
+			
+			//헤더설정
+			resp.setHeader("Content-Type", "application/octet-stream;charset=UTF-8");
+			resp.setHeader("Content-Disposition", "attachment; filename=All.zip");
+			
+			//스트림형성
+			ServletOutputStream bout = resp.getOutputStream();
+			ZipOutputStream zout = new ZipOutputStream(bout);
+			
+			byte[] buff = new byte[4096];
+			
+			for(File file:filelist)
+			{
+				fin = new FileInputStream(file);
+				ZipEntry zip = new ZipEntry(file.getName().toString());
+				zout.putNextEntry(zip);
+				while (true) 
+				{
+					int data = fin.read(buff,0,buff.length);
+					if (data == -1)
+						break;
+					zout.write(buff,0,data);
+				}
+				
+				zout.closeEntry();
+				fin.close();
+			}
+			zout.close();
+		}catch(Exception e) {e.printStackTrace();}
+	}
 	
 }

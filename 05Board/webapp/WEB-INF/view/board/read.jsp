@@ -152,13 +152,13 @@ section {
 						<c:if test="${not empty filenames}">
 							<c:forEach var="i" begin="0" step="1" end="${fn:length(filenames)-1}">
 								<div>
-									<a href="javascript:void(0)">${filenames[i]}</a>(${filesizes[i]}Byte)
+									<a href="${pageContext.request.contextPath}/board/download.do?uuid=${boarddto.dirpath}&filename=${filenames[i]}">${filenames[i]}</a>(${filesizes[i]}Byte)
 								</div>
 							</c:forEach>
 						</c:if>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-primary">ZIP 받기</button>
+						<a type="button" class="btn btn-primary" href="${pageContext.request.contextPath}/board/downloadzip.do?uuid=${boarddto.dirpath}">ZIP 받기</a>
 						<button type="button" class="btn btn-secondary"
 							data-bs-dismiss="modal">닫기</button>
 					</div>

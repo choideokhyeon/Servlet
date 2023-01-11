@@ -26,7 +26,7 @@ public class forwardloginpageFilter implements Filter{
 		HttpSession session = request.getSession(true);	//true(기본) : 세션객체가 없으면 새로 생성
 														//false : 세션객체가 없으면 null
 		
-		if(session.getAttribute("authdto")==null) // 로그인이 아니라면
+		if(session.getAttribute("authdto")==null) // 비로그인 검증
 		{
 			if(request.getRequestURI().contains("/member/join.do"))	//회원가입 접근 허용
 			{
@@ -38,10 +38,6 @@ public class forwardloginpageFilter implements Filter{
 			req.setAttribute("msg", msg);
 			req.getRequestDispatcher("/auth/login.do").forward(request, response);
 			return ;
-		}
-		else
-		{
-			
 		}
 		
 		if(session.getAttribute("authdto").equals("GET")) // 로그인 상태라면
