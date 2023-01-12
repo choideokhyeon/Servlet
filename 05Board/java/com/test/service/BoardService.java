@@ -21,6 +21,7 @@ import com.test.dto.AuthDTO;
 import com.test.dto.BoardDTO;
 import com.test.dto.Criteria;
 import com.test.dto.PageDTO;
+import com.test.dto.ReplyDTO;
 
 public class BoardService {
 
@@ -334,5 +335,33 @@ public class BoardService {
 			zout.close();
 		}catch(Exception e) {e.printStackTrace();}
 	}
+
+	
+	//댓글 쓰기
+	public boolean replyPost(ReplyDTO DTO) {
+		boolean flag = false;
+		
+		int result = DAO.Insert(DTO);
+		if(result > 0)
+			flag = true;
+		
+		return flag;
+	}
+	
+
+	//댓글 불러오기
+	public List<ReplyDTO> ReplyList(ReplyDTO DTO) {
+
+		return DAO.SelectAll(DTO);
+	}
+	
+	
+	
+	//댓글 수 조회
+	public int getReplyCount(int bno) {
+		return DAO.getReplyAmount(bno);
+	}
+
+	
 	
 }

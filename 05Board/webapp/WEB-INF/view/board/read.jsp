@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%><!-- jstl fn cdn -->
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,6 +21,11 @@
 	crossorigin="anonymous"></script>
 <link rel="stylesheet"
 	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+
+<!-- JQuery CDN -->
+<script src="https://code.jquery.com/jquery-3.6.3.min.js"
+	integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU="
+	crossorigin="anonymous"></script>
 
 <style>
 a {
@@ -128,43 +134,123 @@ section {
 
 			<!-- Button -->
 			<tr>
-				<td colspan=4><a class="btn btn-primary" data-bs-toggle="modal"
-					data-bs-target="#exampleModal">첨부파일</a> <a class="btn btn-primary"
-					href="${pageContext.request.contextPath}/board/list.do?=pageno=${pagedto.criteria.pageno}">이전으로</a>
-					<a class="btn btn-primary">수정하기</a> <a class="btn btn-primary">삭제하기</a>
+				<td colspan=4>
+					<a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">첨부파일</a>
+					<a class="btn btn-primary" href="${pageContext.request.contextPath}/board/list.do?pageno=${pagedto.criteria.pageno}">이전으로</a>
+					<a class="btn btn-primary" href="${pageContext.request.contextPath}/board/update.do?pageno=${pagedto.criteria.pageno}">수정하기</a>
+					<a class="btn btn-primary">삭제하기</a>
 				</td>
 			</tr>
 		</table>
 		<!-- Modal -->
-		<div class="modal fade" id="exampleModal" tabindex="-1"
-			aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-dialog-centered">
 				<div class="modal-content">
 					<div class="modal-header">
 						<h5 class="modal-title" id="exampleModalLabel">첨부파일 리스트</h5>
-						<button type="button" class="btn-close" data-bs-dismiss="modal"
-							aria-label="Close"></button>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
 					<div class="modal-body">
 						<!-- jstl fn -->
 						<c:set var="filenames" value="${fn:split(boarddto.filename,';')}" />
 						<c:set var="filesizes" value="${fn:split(boarddto.filesize,';')}" />
 						<c:if test="${not empty filenames}">
-							<c:forEach var="i" begin="0" step="1" end="${fn:length(filenames)-1}">
+							<c:forEach var="i" begin="0" step="1"
+								end="${fn:length(filenames)-1}">
 								<div>
-									<a href="${pageContext.request.contextPath}/board/download.do?uuid=${boarddto.dirpath}&filename=${filenames[i]}">${filenames[i]}</a>(${filesizes[i]}Byte)
+									<a
+										href="${pageContext.request.contextPath}/board/download.do?uuid=${boarddto.dirpath}&filename=${filenames[i]}">${filenames[i]}</a>(${filesizes[i]}Byte)
 								</div>
 							</c:forEach>
 						</c:if>
 					</div>
 					<div class="modal-footer">
 						<a type="button" class="btn btn-primary" href="${pageContext.request.contextPath}/board/downloadzip.do?uuid=${boarddto.dirpath}">ZIP 받기</a>
-						<button type="button" class="btn btn-secondary"
-							data-bs-dismiss="modal">닫기</button>
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
 					</div>
 				</div>
 			</div>
 		</div>
+
+
+		<!-- REPLY -->
+		<div class="reply-header" style="margin-top: 20px;">
+			<span>댓글</span>&nbsp;&nbsp;<span id=replycnt></span>
+		</div>
+		<div class="reply-input" style="position: relative; width: 75%;">
+			<form action="" style="display: flex;" onsubmit="return false;">
+				<input type="text" id="comment" style="width: 100%; outline: none; border: 0px;" placeholder="댓글입력.." />
+				<button class="btn btn-primary" onclick="postreply('${pageContext.request.contextPath}')" >작성</button>
+			</form>
+		</div>
+		<div class="reply-body">
+			
+		</div>
 	</section>
+
+	<script defer>
+		const postreply = function(path)
+		{
+			$.ajax({
+				url : path + "/board/replypost.do",
+				type : "GET",
+				dataType : 'html',
+				data : {"bno":${boarddto.no},"comment":$('#comment').val()},
+				success : function(result){
+					alert(result);
+					$('#comment').val('');
+					
+					$('.reply-body *').remove();
+					showreply(path);
+				},
+				error : function(){
+					alert('error');
+				}
+			})
+		}
+		
+		
+		
+		const showreply = function(path)
+		{
+			$.ajax({
+				url : path + "/board/replylist.do",
+				type : "GET",
+				dataType : 'html',
+				data : {"bno":${boarddto.no}},
+				success : function(result){
+					$('.reply-body').html(result);
+					replycnt(path);
+				},
+				error : function(){
+					alert('error');
+				}
+			})
+		}
+		showreply('${pageContext.request.contextPath}');
+		
+		
+		
+		const replycnt = function(path)
+		{
+			$.ajax({
+				url : path + "/board/replycnt.do",
+				type : "GET",
+				dataType : 'html',
+				data : {"bno":${boarddto.no}},
+				success : function(result)
+				{
+					/* alert(result); */
+					$('#replycnt').html(result);
+				},
+				error : function(){
+					alert('error');
+				}
+			})	
+		}
+		
+	</script>
+
+
 </body>
 </html>

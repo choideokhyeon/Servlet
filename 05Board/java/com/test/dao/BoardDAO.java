@@ -10,6 +10,7 @@ import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
 import com.test.dto.BoardDTO;
+import com.test.dto.ReplyDTO;
 
 public class BoardDAO {
 	
@@ -123,7 +124,7 @@ public class BoardDAO {
 	}
 	
 	
-	
+	//게시판 삽입
 	public int Insert(BoardDTO DTO) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -221,8 +222,102 @@ public class BoardDAO {
 		
 		return result;
 	}
+
+	
+	//댓글 삽입
+	public int Insert(ReplyDTO DTO) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		int result = 0;
+		
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement("insert into tbl_reply values(null,?,?,?,now())"); 
+			System.out.println("BoardDAO 에러");
+			pstmt.setInt(1, Integer.parseInt(DTO.getBno()));
+			pstmt.setString(2, DTO.getEmail());
+			pstmt.setString(3, DTO.getContent());
+			result = pstmt.executeUpdate();
+
+		} catch(Exception e){e.printStackTrace();}
+		finally{
+			try {pstmt.close();}catch(Exception e) {}
+			try {conn.close();}catch(Exception e) {}
+		}
+		
+		return result;
+	}
+
+
+	//댓글 리스트 열람
+	public List<ReplyDTO> SelectAll(ReplyDTO RDTO) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		List<ReplyDTO> list = new ArrayList();
+		ReplyDTO DTO = null;
+		
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement("select * from tbl_reply where bno=? order by rno desc");
+			pstmt.setInt(1, Integer.parseInt(RDTO.getBno()));
+			
+			rs=pstmt.executeQuery();
+			if(rs != null)
+			{
+				while(rs.next())
+				{
+					DTO = new ReplyDTO();
+					DTO.setRno(rs.getInt(1) + "");
+					DTO.setBno(rs.getInt(2) + "");
+					DTO.setEmail(rs.getString(3));
+					DTO.setContent(rs.getString(4));
+					DTO.setRegdate(rs.getString(5));
+					list.add(DTO);
+				}
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+			return null;
+		} finally{
+			try {rs.close();}catch(Exception e) {}
+			try {pstmt.close();}catch(Exception e) {}
+			try {conn.close();}catch(Exception e) {}
+		}
+		
+		return list;
+	}
 	
 	
+	public int getReplyAmount(int bno) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		int cnt = 0;
+		
+		try {
+			conn = ds.getConnection();
+			pstmt = conn.prepareStatement("select count(*) from tbl_reply where bno=?");
+			pstmt.setInt(1, bno);
+			
+			rs=pstmt.executeQuery();
+			if(rs != null)
+			{
+				rs.next();
+				cnt = rs.getInt(1);				
+			}
+		} catch(Exception e){e.printStackTrace();}
+		finally{
+			try {rs.close();}catch(Exception e) {}
+			try {pstmt.close();}catch(Exception e) {}
+			try {conn.close();}catch(Exception e) {}
+		}
+		
+		return cnt;
+	}
 	
 	
 }

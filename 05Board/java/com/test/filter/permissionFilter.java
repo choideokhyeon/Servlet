@@ -39,8 +39,16 @@ public class permissionFilter implements Filter {
 		pageGradeMap.put(path+"/board/list.do", 0);
 		pageGradeMap.put(path+"/board/post.do", 1);
 		pageGradeMap.put(path+"/board/read.do", 1);
+		pageGradeMap.put(path+"/board/update.do", 1);
+		pageGradeMap.put(path+"/board/delete.do", 1);
+		
 		pageGradeMap.put(path+"/board/download.do", 1);
 		pageGradeMap.put(path+"/board/downloadzip.do", 1);
+		
+		pageGradeMap.put(path+"/board/replypost.do", 1);
+		pageGradeMap.put(path+"/board/replylist.do", 1);
+		pageGradeMap.put(path+"/board/replycnt.do", 1);
+		
 		
 		//공지사항 권한
 		pageGradeMap.put(path+"/notice/list.do", 1);
